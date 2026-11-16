@@ -54,7 +54,7 @@ function parseTar(data:Uint8Array):TarEntry[]{
  return files.filter(file=>file.name.toLowerCase().endsWith(".sgf")).sort((a,b)=>a.name.localeCompare(b.name));
 }
 function parseArgs(args:string[]):ImportOptions{
- const options:ImportOptions={difficulty:"15K",type:"死活",outputDir:"data/raw/15K",concurrency:4};
+ const options:ImportOptions={difficulty:"15K",type:"死活",concurrency:4};
  for(let i=0;i<args.length;i++){
   const arg=args[i]!,value=args[i+1];
   if(arg==="--difficulty"&&value){options.difficulty=value;i++;}
@@ -71,7 +71,7 @@ function parseArgs(args:string[]):ImportOptions{
 }
 export async function importLifeAndDeathLibrary(options:ImportOptions={}):Promise<ImportSummary>{
  const difficulty=options.difficulty??"15K",type=options.type??"死活",limit=options.limit??Number.POSITIVE_INFINITY;
- const outputDir=resolve(options.outputDir??"data/raw/15K"),concurrency=options.concurrency??4;
+ const outputDir=resolve(options.outputDir??("data/raw/"+difficulty.toLowerCase())),concurrency=options.concurrency??4;
  const index=gunzipJson<{categories?:Record<string,string[]>}>(await download(DATA_BASE+"/index.json.gz"));
  const dates=index.categories?.["life-and-death"]??[];
  if(!dates.length)throw new Error("The source index contains no life-and-death dates");
@@ -86,9 +86,9 @@ export async function importLifeAndDeathLibrary(options:ImportOptions={}):Promis
   labels[label]=(labels[label]??0)+1;
   const matchesType=!type||label.includes(type);
   const matchesDifficulty=!difficulty||difficulty.toUpperCase()==="ALL"||label.toUpperCase().includes("·"+difficulty.toUpperCase());
-  if(matchesType&&matchesDifficulty){selected.push(i);if(selected.length>=limit)break;}
+  if(matchesType&&matchesDifficulty&&selected.length<limit)selected.push(i);
  }
- const chunkIndexes=[...new Set(selected.map(i=>Math.floor(i/meta.chunkSize)))];
+ const selectedSet=new Set(selected);\n const chunkIndexes=[...new Set(selected.map(i=>Math.floor(i/meta.chunkSize)))];
  await mkdir(outputDir,{recursive:true});
  let cursor=0,written=0;
  const worker=async()=>{
@@ -101,7 +101,7 @@ export async function importLifeAndDeathLibrary(options:ImportOptions={}):Promis
    if(tar.length!==chunk.count)throw new Error("Chunk "+part+" expected "+chunk.count+" SGFs, found "+tar.length);
    for(let local=0;local<tar.length;local++){
     const global=chunk.start+local;
-    if(!selected.includes(global))continue;
+    if(!selectedSet.has(global))continue;
     const id=meta.ids[global];
     if(!id||!/^[a-f0-9]{32}$/i.test(id))throw new Error("Invalid stable puzzle id at metadata index "+global);
     const filename=join(outputDir,id+".sgf");
