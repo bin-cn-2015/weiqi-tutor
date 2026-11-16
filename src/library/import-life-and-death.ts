@@ -88,7 +88,8 @@ export async function importLifeAndDeathLibrary(options:ImportOptions={}):Promis
   const matchesDifficulty=!difficulty||difficulty.toUpperCase()==="ALL"||label.toUpperCase().includes("·"+difficulty.toUpperCase());
   if(matchesType&&matchesDifficulty&&selected.length<limit)selected.push(i);
  }
- const selectedSet=new Set(selected);\n const chunkIndexes=[...new Set(selected.map(i=>Math.floor(i/meta.chunkSize)))];
+ const selectedSet=new Set(selected);
+ const chunkIndexes=[...new Set(selected.map(i=>Math.floor(i/meta.chunkSize)))];
  await mkdir(outputDir,{recursive:true});
  let cursor=0,written=0;
  const worker=async()=>{
