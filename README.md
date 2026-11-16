@@ -49,10 +49,7 @@ npm run split:dataset -- ./data/processed/15K-explanations.jsonl ./data/processe
 
 ```bash
 pip install -r training/requirements.txt
-python training/finetune_lora.py \\
-  --train data/processed/split/train.jsonl \\
-  --validation data/processed/split/validation.jsonl \\
-  --output-dir artifacts/weiqi-tutor-qwen3-0.6b-lora
+python training/finetune_lora.py --train data/processed/split/train.jsonl --validation data/processed/split/validation.jsonl --output-dir artifacts/weiqi-tutor-qwen3-0.6b-lora
 ```
 
 详细说明见 [`training/README.md`](training/README.md)。
