@@ -23,6 +23,16 @@ python training/finetune_lora.py \
 
 Defaults are deliberately conservative: LoRA rank 8, 3 epochs, 2,048-token maximum, batch size 1 and gradient accumulation 8. Adjust batch size and accumulation to fit GPU memory.
 
+## Evaluate the adapter
+
+After training, evaluate on the puzzle-grouped held-out split:
+
+```bash
+python training/evaluate.py --adapter artifacts/weiqi-tutor-qwen3-0.6b-lora --data data/processed/split/validation.jsonl
+```
+
+The report includes branch-label accuracy, first-move top-1 hit rate, and JSON-format failures. These are task metrics, not a proof of Go strength; the move-policy metric only checks whether the model returns one of the verified source-labeled first moves.
+
 ## Important scope
 
 This first adapter is a *verbalization baseline*: it is trained on rule-verified local facts and source-labeled correct/wrong branches. It is not a Go solver and does not prove whole-board life/death outcomes. Those require stronger tactical search and an independently curated evaluation set.
