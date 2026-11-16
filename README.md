@@ -27,9 +27,14 @@ npm run import:library -- --difficulty 15K --type 死活 --limit 100
 # 对导入题库进行规则验证并生成 JSONL 监督数据
 npm run build:dataset -- ./data/raw/15K ./data/processed/15K.jsonl
 npm run audit:sgf -- ./data/raw/15K
+npm run build:explanations -- ./data/processed/15K.jsonl ./data/processed/15K-explanations.jsonl
 ```
 
 可用参数：`--difficulty 15K`、`--type 死活`、`--limit N`、`--output DIR`、`--concurrency 1..8`。设 `--difficulty all` 可忽略难度筛选。
+
+## 从棋理事实生成解释监督样本
+
+`build:explanations` 将已通过规则校验的明确正解/失败变化，转换为带有提子、打吃、连接、气数和眼位事实的中文解释样本。它只生成局部棋理解释，不会把局部特征误当成整道题的胜负结论。
 
 ## 数据质量约束
 

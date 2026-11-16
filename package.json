@@ -1,6 +1,6 @@
 {
   "name": "weiqi-tutor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "A beginner-friendly Go tsumego understanding and explanation model",
@@ -9,7 +9,8 @@
     "build": "tsc",
     "audit:sgf": "node dist/cli/audit-sgf.js",
     "build:dataset": "node dist/cli/build-dataset.js",
-    "import:library": "node dist/cli/import-library.js"
+    "import:library": "node dist/cli/import-library.js",
+    "build:explanations": "node dist/cli/build-explanations.js"
   },
   "dependencies": {
     "pako": "^2.1.0",
