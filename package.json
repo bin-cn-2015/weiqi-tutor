@@ -1,0 +1,19 @@
+{
+  "name": "weiqi-tutor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A beginner-friendly Go tsumego understanding and explanation model",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "audit:sgf": "node dist/cli/audit-sgf.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.10.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
