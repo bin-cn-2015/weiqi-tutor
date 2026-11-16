@@ -1,5 +1,5 @@
 import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
-import { dirname, extname, join, resolve } from "node:path";
+import { basename, dirname, extname, join, resolve } from "node:path";
 import { parseSgf } from "../sgf/parser.js";
 import { extractTsumego } from "../tsumego/extract.js";
 import { validateTsumego } from "../validation/replay.js";
@@ -15,7 +15,7 @@ async function main(){
  const input=resolve(inputArg),output=resolve(outputArg),files=await collectSgf(input);
  const records:ReturnType<typeof buildSupervisionRecords>[number][]=[];
  const errors:Array<{file:string;error:string}>=[];
- for(const file of files){try{const puzzle=extractTsumego(parseSgf(await readFile(file,"utf8")));const validation=validateTsumego(puzzle);records.push(...buildSupervisionRecords(puzzle,validation,file));}catch(error){errors.push({file,error:error instanceof Error?error.message:String(error)});}}
+ for(const file of files){try{const puzzle=extractTsumego(parseSgf(await readFile(file,"utf8")));const validation=validateTsumego(puzzle);let metadata:{id?:string;label?:string;date?:string}={id:basename(file,".sgf")};try{metadata={...metadata,...JSON.parse(await readFile(file.replace(/\\.sgf$/i,".json"),"utf8"))};}catch(error){if((error as NodeJS.ErrnoException).code!=="ENOENT")throw error;}records.push(...buildSupervisionRecords(puzzle,validation,file,metadata));}catch(error){errors.push({file,error:error instanceof Error?error.message:String(error)});}}
  await mkdir(dirname(output),{recursive:true});
  await writeFile(output,records.map(record=>JSON.stringify(record)).join("\n")+(records.length?"\n":""),"utf8");
  console.log(JSON.stringify({files:files.length,failed:errors.length,output,...summarizeSupervision(records),errors:errors.slice(0,30)},null,2));

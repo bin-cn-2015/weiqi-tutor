@@ -4,7 +4,7 @@ import { explainMove } from "../explanation/move-explainer.js";
 import type { SupervisionRecord } from "../dataset/supervision.js";
 
 interface ExplanationRecord {
- schemaVersion:1;puzzleId:string;boardSize:number;initialPlayer:"B"|"W";setup:SupervisionRecord["setup"];
+ schemaVersion:1;puzzleId:string;boardSize:number;initialPlayer:"B"|"W";setup:SupervisionRecord["setup"];puzzleContext:SupervisionRecord["puzzleContext"];
  branchIndex:number;answerLabel:"correct"|"wrong";scope:"verified-local-move-facts";
  input:{moves:Array<{number:number;player:"B"|"W";x:number;y:number}>};
  target:{moves:ReturnType<typeof explainMove>[];disclaimer:string};
@@ -19,7 +19,7 @@ async function main(){
   const record=JSON.parse(line) as SupervisionRecord;
   if(!record.trainingEligible||record.ruleStatus!=="valid"||(record.sourceLabel!=="correct"&&record.sourceLabel!=="wrong")){skipped++;continue;}
   records.push({
-   schemaVersion:1,puzzleId:record.puzzleId,boardSize:record.boardSize,initialPlayer:record.initialPlayer,setup:record.setup,
+   schemaVersion:1,puzzleId:record.puzzleId,boardSize:record.boardSize,initialPlayer:record.initialPlayer,setup:record.setup,puzzleContext:record.puzzleContext,
    branchIndex:record.branchIndex,answerLabel:record.sourceLabel,scope:"verified-local-move-facts",
    input:{moves:record.moves.map(move=>({number:move.index,player:move.color,x:move.x,y:move.y}))},
    target:{moves:record.moves.map(explainMove),disclaimer:"以上只解释规则引擎已经验证的局部棋理事实；不能仅凭这些局部事实断言整道死活题已做活或已杀死。"}

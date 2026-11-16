@@ -22,7 +22,7 @@ export interface TsumegoBranch {
   moves: Array<{ color: SgfColor; x: number; y: number }>;
 }
 
-export interface ParsedTsumego {
+export interface TsumegoContext {\n  title: string;\n  comments: string[];\n}\n\nexport interface ParsedTsumego {\n  context: TsumegoContext;
   boardSize: number;
   initialPlayer: SgfColor;
   setup: Array<{ color: SgfColor; x: number; y: number }>;

@@ -1,8 +1,8 @@
-import { createHash } from "node:crypto";
+import { createHash } from "node:crypto";\nimport { basename } from "node:path";
 import type { ParsedTsumego, TsumegoBranch } from "../sgf/types.js";
 import type { BranchValidation, PuzzleValidation, ValidatedMove } from "../validation/replay.js";
 export interface SupervisionRecord {
- schemaVersion:1;puzzleId:string;sourceFile:string;boardSize:number;initialPlayer:"B"|"W";setup:ParsedTsumego["setup"];
+ schemaVersion:1;puzzleId:string;sourceFile:string;boardSize:number;initialPlayer:"B"|"W";setup:ParsedTsumego["setup"];\n puzzleContext:{title:string;comments:string[];label:string;category:string;difficulty:string;sourceDate:string};
  branchIndex:number;sourceLabel:TsumegoBranch["verdict"];sourceLabelText:string;ruleStatus:BranchValidation["verdict"];
  trainingEligible:boolean;labelConflict:boolean;moves:ValidatedMove[];ruleErrors:string[];
 }
@@ -14,7 +14,7 @@ export function buildSupervisionRecords(puzzle:ParsedTsumego,validation:PuzzleVa
   const labelConflict=branch.verdict==="correct"&&checked.verdict==="illegal";
   const explicitLabel=branch.verdict==="correct"||branch.verdict==="wrong";
   const trainingEligible=explicitLabel&&checked.verdict==="valid"&&branch.moves.length>0&&!labelConflict;
-  return{schemaVersion:1,puzzleId,sourceFile,boardSize:puzzle.boardSize,initialPlayer:puzzle.initialPlayer,setup:puzzle.setup,branchIndex:branch.index,sourceLabel:branch.verdict,sourceLabelText:branch.label,ruleStatus:checked.verdict,trainingEligible,labelConflict,moves:checked.moves,ruleErrors:checked.errors};
+  return{schemaVersion:1,puzzleId,sourceFile:filename,boardSize:puzzle.boardSize,initialPlayer:puzzle.initialPlayer,setup:puzzle.setup,puzzleContext:{title:puzzle.context.title,comments:puzzle.context.comments,label:metadata.label??"",category,difficulty,sourceDate:metadata.date??""},branchIndex:branch.index,sourceLabel:branch.verdict,sourceLabelText:branch.label,ruleStatus:checked.verdict,trainingEligible,labelConflict,moves:checked.moves,ruleErrors:checked.errors};
  });
 }
 export function summarizeSupervision(records:SupervisionRecord[]){

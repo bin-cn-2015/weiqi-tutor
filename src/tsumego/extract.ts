@@ -39,5 +39,5 @@ export function extractTsumego(sgf:{boardSize:number;initialPlayer:"B"|"W";setup
  if(!branches.length)warnings.push("No answer branches found in SGF variation tree");
  if(!branches.some(branch=>branch.verdict==="correct"))warnings.push("No explicitly labeled correct branch found; do not infer one from branch order");
  if(branches.some(branch=>branch.verdict==="unknown"))warnings.push("Some answer lines are unlabeled or have conflicting labels");
- return{boardSize:sgf.boardSize,initialPlayer:sgf.initialPlayer,setup:sgf.setup,branches,warnings};
+ return{boardSize:sgf.boardSize,initialPlayer:sgf.initialPlayer,setup:sgf.setup,context:{title:sgf.root.properties.GN?.[0]??"",comments:sgf.root.properties.C??[]},branches,warnings};
 }
