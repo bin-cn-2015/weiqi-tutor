@@ -1,0 +1,8 @@
+node_modules/
+dist/
+data/
+artifacts/
+.venv/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo

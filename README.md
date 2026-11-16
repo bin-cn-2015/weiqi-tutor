@@ -43,6 +43,20 @@ npm run split:dataset -- ./data/processed/15K-explanations.jsonl ./data/processe
 
 训练/验证集按稳定题目 ID 分组切分，同一道题的不同变化线不会同时出现在训练集和验证集，避免数据泄漏。GitHub Actions 会自动构建数据并上传短期数据集 artifact。
 
+## 初始模型训练
+
+已加入基于 [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) 的 LoRA 微调脚本，模型权重采用 Apache-2.0 许可。它是首个小模型基线，不代表已经训练完成；训练需要 CUDA GPU。
+
+```bash
+pip install -r training/requirements.txt
+python training/finetune_lora.py \\
+  --train data/processed/split/train.jsonl \\
+  --validation data/processed/split/validation.jsonl \\
+  --output-dir artifacts/weiqi-tutor-qwen3-0.6b-lora
+```
+
+详细说明见 [`training/README.md`](training/README.md)。
+
 ## 数据质量约束
 
 - 只把 SGF 中明确标注的正解/失败分支视为监督标签。
