@@ -88,6 +88,25 @@ function first(values: string[] | undefined): string | undefined {
   return values?.[0];
 }
 
+function parseSetupPoints(raw: string, boardSize: number): Array<{ x: number; y: number }> {
+  const range = raw.split(":");
+  if (range.length === 1) {
+    const point = parseCoord(raw, boardSize);
+    return point ? [point] : [];
+  }
+  if (range.length !== 2) throw new Error("Invalid SGF setup range: " + raw);
+  const from = parseCoord(range[0]!, boardSize);
+  const to = parseCoord(range[1]!, boardSize);
+  if (!from || !to || from.x > to.x || from.y > to.y) {
+    throw new Error("Invalid SGF setup range: " + raw);
+  }
+  const points: Array<{ x: number; y: number }> = [];
+  for (let y = from.y; y <= to.y; y++) {
+    for (let x = from.x; x <= to.x; x++) points.push({ x, y });
+  }
+  return points;
+}
+
 function parseCoord(raw: string, boardSize: number): { x: number; y: number } | null {
   if (raw === "" || raw === "tt") return null;
   if (raw.length !== 2) throw new Error(`Invalid SGF coordinate: ${raw}`);
@@ -107,8 +126,7 @@ export function parseSgf(sgf: string): SgfGame {
   const setup: SgfGame["setup"] = [];
   for (const [property, color] of [["AB", "B"], ["AW", "W"]] as const) {
     for (const coord of root.properties[property] ?? []) {
-      const point = parseCoord(coord, size);
-      if (point) setup.push({ color, ...point });
+      for (const point of parseSetupPoints(coord, size)) setup.push({ color, ...point });
     }
   }
 
