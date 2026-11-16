@@ -11,9 +11,12 @@ function classifyOne(label:string):BranchVerdict{
  return"unknown";
 }
 function classifyPath(labels:string[]):BranchVerdict{
- let verdict:BranchVerdict="unknown";
- for(const label of labels){const current=classifyOne(label);if(current!=="unknown")verdict=current;else if(/失败|错误|错解|不成立|正解|正确|成功|wrong|incorrect|correct/i.test(label))return"unknown";}
- return verdict;
+ const verdicts=labels.map(classifyOne);
+ const hasCorrect=verdicts.includes("correct"),hasWrong=verdicts.includes("wrong");
+ if(hasCorrect&&hasWrong)return"unknown";
+ if(hasCorrect)return"correct";
+ if(hasWrong)return"wrong";
+ return verdicts.includes("variation")?"variation":"unknown";
 }
 interface LeafLine{moves:TsumegoBranch["moves"];labels:string[];}
 function collectAllLines(start:SgfNode,boardSize:number):LeafLine[]{

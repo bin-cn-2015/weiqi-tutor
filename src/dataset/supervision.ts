@@ -13,7 +13,7 @@ export function buildSupervisionRecords(puzzle:ParsedTsumego,validation:PuzzleVa
   if(!checked)throw new Error("Missing rule validation for branch "+branch.index);
   const labelConflict=branch.verdict==="correct"&&checked.verdict==="illegal";
   const explicitLabel=branch.verdict==="correct"||branch.verdict==="wrong";
-  const trainingEligible=explicitLabel&&branch.moves.length>0&&!labelConflict;
+  const trainingEligible=explicitLabel&&checked.verdict==="valid"&&branch.moves.length>0&&!labelConflict;
   return{schemaVersion:1,puzzleId,sourceFile,boardSize:puzzle.boardSize,initialPlayer:puzzle.initialPlayer,setup:puzzle.setup,branchIndex:branch.index,sourceLabel:branch.verdict,sourceLabelText:branch.label,ruleStatus:checked.verdict,trainingEligible,labelConflict,moves:checked.moves,ruleErrors:checked.errors};
  });
 }
