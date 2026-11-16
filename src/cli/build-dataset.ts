@@ -23,7 +23,7 @@ async function readMetadata(file: string): Promise<SourcePuzzleMetadata> {
   const metadataPath = file.slice(0, -4) + ".json";
   try {
     const raw = JSON.parse(await readFile(metadataPath, "utf8")) as SourcePuzzleMetadata;
-    return { id: raw.id ?? basename(file, ".sgf"), label: raw.label, date: raw.date };
+    return { id: raw.id ?? basename(file, ".sgf"), ...(raw.label ? { label: raw.label } : {}), ...(raw.date ? { date: raw.date } : {}) };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       return { id: basename(file, ".sgf") };
