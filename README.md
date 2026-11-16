@@ -11,6 +11,12 @@
 3. 用规则计算验证每一步的棋理事实。
 4. 生成结构化监督样本，再训练和评估启蒙模型。
 
+## 已实现
+
+- SGF 基础解析与题目答案分支提取。
+- 围棋棋盘规则核心：连通块、气、提子、自杀禁入、劫点和重复局面检查。
+- 对提取出的分支逐手回放，输出每手是否合法及棋理事实（提子数、己方气数、相邻敌我棋块、打吃数量等）。
+
 ## 开发
 
 要求 Node.js >= 20。
@@ -19,11 +25,12 @@
 npm install
 npm run typecheck
 npm run build
+npm run audit:sgf -- ./path/to/sgf-directory
 ```
 
 ## 复用来源
 
-题库与部分围棋基础设施来自项目所有者的 [weiqi-bot](https://github.com/zhangbin2025/weiqi-bot)。本项目先以独立、可审计的数据处理核心为边界，避免直接耦合整个应用。
+题库与部分围棋基础设施来自项目所有者的 [weiqi-bot](https://github.com/zhangbin2025/weiqi-bot)。
 
 ## 设计原则
 
