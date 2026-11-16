@@ -28,6 +28,7 @@ npm run import:library -- --difficulty 15K --type 死活 --limit 100
 npm run build:dataset -- ./data/raw/15K ./data/processed/15K.jsonl
 npm run audit:sgf -- ./data/raw/15K
 npm run build:explanations -- ./data/processed/15K.jsonl ./data/processed/15K-explanations.jsonl
+npm run split:dataset -- ./data/processed/15K-explanations.jsonl ./data/processed/split 10
 ```
 
 可用参数：`--difficulty 15K`、`--type 死活`、`--limit N`、`--output DIR`、`--concurrency 1..8`。设 `--difficulty all` 可忽略难度筛选。
@@ -35,6 +36,12 @@ npm run build:explanations -- ./data/processed/15K.jsonl ./data/processed/15K-ex
 ## 从棋理事实生成解释监督样本
 
 `build:explanations` 将已通过规则校验的明确正解/失败变化，转换为带有提子、打吃、连接、气数和眼位事实的中文解释样本。它只生成局部棋理解释，不会把局部特征误当成整道题的胜负结论。
+
+## 训练数据格式
+
+解释样本已经转换为通用的三轮 `messages` 对话格式，可供后续 SFT/LoRA 训练。输入包含棋盘尺寸、先手、初始摆子、题库题型/难度、SGF 根节点说明，以及规则引擎验证过的逐手棋理事实；目标包含正解/错解标签和对应的初学者解释。
+
+训练/验证集按稳定题目 ID 分组切分，同一道题的不同变化线不会同时出现在训练集和验证集，避免数据泄漏。GitHub Actions 会自动构建数据并上传短期数据集 artifact。
 
 ## 数据质量约束
 
