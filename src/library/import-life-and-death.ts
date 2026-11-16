@@ -71,7 +71,7 @@ function parseArgs(args:string[]):ImportOptions{
 }
 export async function importLifeAndDeathLibrary(options:ImportOptions={}):Promise<ImportSummary>{
  const difficulty=options.difficulty??"15K",type=options.type??"死活",limit=options.limit??Number.POSITIVE_INFINITY;
- const outputDir=resolve(options.outputDir??("data/raw/"+difficulty.toLowerCase())),concurrency=options.concurrency??4;
+ const outputDir=resolve(options.outputDir??("data/raw/"+difficulty.toUpperCase())),concurrency=options.concurrency??4;
  const index=gunzipJson<{categories?:Record<string,string[]>}>(await download(DATA_BASE+"/index.json.gz"));
  const dates=index.categories?.["life-and-death"]??[];
  if(!dates.length)throw new Error("The source index contains no life-and-death dates");
