@@ -11,7 +11,9 @@
     "build:dataset": "node dist/cli/build-dataset.js",
     "import:library": "node dist/cli/import-library.js",
     "build:explanations": "node dist/cli/build-explanations.js",
-    "split:dataset": "node dist/cli/split-dataset.js"
+    "split:dataset": "node dist/cli/split-dataset.js",
+    "build:puzzle-policy": "node dist/cli/build-puzzle-policy.js",
+    "merge:dataset": "node dist/cli/merge-dataset.js"
   },
   "dependencies": {
     "pako": "^2.1.0",

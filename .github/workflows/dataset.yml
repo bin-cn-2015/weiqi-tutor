@@ -33,8 +33,12 @@ jobs:
         run: npm run build:dataset -- data/raw/15K data/processed/15K.jsonl
       - name: Build fact-grounded Chinese explanations
         run: npm run build:explanations -- data/processed/15K.jsonl data/processed/15K-explanations.jsonl
+      - name: Build puzzle first-move policy samples
+        run: npm run build:puzzle-policy -- data/processed/15K.jsonl data/processed/15K-policy.jsonl
+      - name: Merge explanation and policy tasks
+        run: npm run merge:dataset -- data/processed/15K-sft.jsonl data/processed/15K-explanations.jsonl data/processed/15K-policy.jsonl
       - name: Split train and validation by puzzle ID
-        run: npm run split:dataset -- data/processed/15K-explanations.jsonl data/processed/split 10
+        run: npm run split:dataset -- data/processed/15K-sft.jsonl data/processed/split 10
       - uses: actions/upload-artifact@v4
         with:
           name: weiqi-tutor-15k-dataset
@@ -42,6 +46,8 @@ jobs:
             data/raw/15K/manifest.json
             data/processed/15K.jsonl
             data/processed/15K-explanations.jsonl
+            data/processed/15K-policy.jsonl
+            data/processed/15K-sft.jsonl
             data/processed/split/train.jsonl
             data/processed/split/validation.jsonl
           if-no-files-found: error
