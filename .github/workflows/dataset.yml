@@ -1,0 +1,44 @@
+name: Build beginner tsumego dataset
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/library/**"
+      - "src/sgf/**"
+      - "src/tsumego/**"
+      - "src/validation/**"
+      - "src/dataset/**"
+      - "src/explanation/**"
+      - "src/cli/**"
+      - "package.json"
+      - "tsconfig.json"
+      - ".github/workflows/dataset.yml"
+permissions:
+  contents: read
+jobs:
+  build-dataset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run build
+      - name: Import all 15K life-and-death problems
+        run: npm run import:library -- --difficulty 15K --type 死活 --output data/raw/15K --concurrency 4
+      - name: Build verified supervision records
+        run: npm run build:dataset -- data/raw/15K data/processed/15K.jsonl
+      - name: Build fact-grounded Chinese explanations
+        run: npm run build:explanations -- data/processed/15K.jsonl data/processed/15K-explanations.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: weiqi-tutor-15k-dataset
+          path: |
+            data/raw/15K/manifest.json
+            data/processed/15K.jsonl
+            data/processed/15K-explanations.jsonl
+          if-no-files-found: error
+          retention-days: 14
