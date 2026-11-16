@@ -39,6 +39,6 @@ jobs:
           path: |
             data/raw/15K/manifest.json
             data/processed/15K.jsonl
-            data/processed/15K-explanations.jsonl
+            data/processed/15K-explanations.jsonl\n            data/processed/split/train.jsonl\n            data/processed/split/validation.jsonl
           if-no-files-found: error
           retention-days: 14

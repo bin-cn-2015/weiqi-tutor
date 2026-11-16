@@ -10,7 +10,8 @@
     "audit:sgf": "node dist/cli/audit-sgf.js",
     "build:dataset": "node dist/cli/build-dataset.js",
     "import:library": "node dist/cli/import-library.js",
-    "build:explanations": "node dist/cli/build-explanations.js"
+    "build:explanations": "node dist/cli/build-explanations.js",
+    "split:dataset": "node dist/cli/split-dataset.js"
   },
   "dependencies": {
     "pako": "^2.1.0",
